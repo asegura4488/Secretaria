@@ -46,7 +46,7 @@ def CheckAuthor(author, biblines):
 # Funcion para cada archivo
 Files = []
 for f in glob.glob('Data/*.bib'):
-    file = open(f, "r")
+    file = open(f, "r", encoding='utf-8')
     Files.append(file)
     
 #Files[0].name    
