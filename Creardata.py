@@ -17,10 +17,10 @@ if not path.exists('Config/Diccionario.txt'):
     exit(1)
 
 
-with open('Config/Profesores.txt','r') as fprofe:
+with open('Config/Profesores.txt','r', encoding='utf-8') as fprofe:
     Lista_Profesores = [linea.rstrip() for linea in fprofe]
 
-with open('Config/Diccionario.txt','r') as fdict:
+with open('Config/Diccionario.txt','r', encoding='utf-8') as fdict:
     Dict_Profesores = [linea.rstrip() for linea in fdict]
 
 if len(Lista_Profesores) != len(Dict_Profesores):
