@@ -72,9 +72,12 @@ for f in Files:
     
     for i, name in enumerate(Autores_Andes):
         if i==0:
-            output.write(name)
+            output.write('author={'+name)
+        elif i == len(Autores_Andes)-1:
+            output.write(', '+name+'},')
         else:
             output.write(', '+name)
+        
         
     output.close()
     
