@@ -77,7 +77,14 @@ for f in Files:
             final_authors+=name
         else:
             final_authors+=', '+name
-        
+
+    encontrado = False
+    for l in biblines:
+        CMS = l.find('CMS')
+        if CMS != -1 and encontrado == False:
+            encontrado = True
+            final_authors += ', CMS Collaboration' 
+
     final_authors+='},\n'
     
     #print(final_authors)
