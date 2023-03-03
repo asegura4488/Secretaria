@@ -1,21 +1,25 @@
 import glob
 import os
 from os import path
+import codecs
 
 if not path.exists('Final'):
     os.mkdir('Final')
 if not path.exists('Final/Data'):
     os.mkdir('Final/Data')
-    print('Creando directorio objetivo')
+
+if not path.exists('Temp'):
+    os.mkdir('Temp')
+if not path.exists('Temp/Data'):
+    os.mkdir('Temp/Data')
 
 if not path.exists('Config/Profesores.txt'):
-	print('Sin archivo de configuracion')
-	exit(1)
+    print('Sin archivo de configuracion')
+    exit(1)
 
 if not path.exists('Config/Diccionario.txt'):
     print('Sin archivo del diccionario')
     exit(1)
-
 
 with open('Config/Profesores.txt','r', encoding='utf-8') as fprofe:
     Lista_Profesores = [linea.rstrip() for linea in fprofe]
@@ -29,8 +33,6 @@ if len(Lista_Profesores) != len(Dict_Profesores):
 
 Dict1 = dict(zip(Lista_Profesores,Dict_Profesores))
 
-print(Dict1)
-
 def CheckAuthor(author, biblines):
         
     NRef = 0
@@ -43,42 +45,60 @@ def CheckAuthor(author, biblines):
                
     return NRef
 
-# Funcion para cada archivo
 Files = []
+
 for f in glob.glob('Data/*.bib'):
-    file = open(f, "r", encoding='utf-8')
+    file = open(f, 'r', encoding='utf-8')
     Files.append(file)
     
 #Files[0].name    
     
 for f in Files:
     
-    print('Creando:', f.name)
+    #print('Creando:', f.name)
     
     biblines = f.readlines()
     
-    Autores_Andes = []
-    
-    output = open("Final/"+f.name, "w")
+    Autor_encontrado = []
+    Autor_noencontrado = []
     
     for author in Lista_Profesores:
-        
         NRef = CheckAuthor(author,biblines)
     
         if NRef == 1:
-            Autores_Andes.append(Dict1[author])
+            Autor_encontrado.append(Dict1[author])
         else:
-            print('Articulo:', f.name, 'No Encontrado:',author)
+            Autor_noencontrado.append(Dict1[author])
+        
+    final_authors='\t author={'
     
-    for i, name in enumerate(Autores_Andes):
-        if i==0:
-            output.write('author={'+name)
-        elif i == len(Autores_Andes)-1:
-            output.write(', '+name+'},')
+    for i,name in enumerate(Autor_encontrado):
+        if i == 0:
+            final_authors+=name
         else:
-            output.write(', '+name)
+            final_authors+=', '+name
         
-        
-    output.close()
+    final_authors+='},\n'
     
-    #print(Autores_Andes)
+    #print(final_authors)
+
+    # Escribimos nueva bibliografica
+    #output = open("Final/"+f.name, "w")
+    with codecs.open("Final/"+f.name, "w", "utf-8") as output:
+    
+        for l in biblines:
+            author_lines = l.find('author')
+            if author_lines != -1:
+                output.write(final_authors) # Cambiamos lista de autores
+            else:
+                output.write(l)
+        
+    #output.close()
+    
+    #output1 = open("Temp/"+f.name, "w")
+    with codecs.open("Temp/"+f.name, "w", "utf-8") as output1:
+    
+        for i, name in enumerate(Autor_noencontrado):
+            output1.write(name+'\n')
+    
+    #output1.close()
