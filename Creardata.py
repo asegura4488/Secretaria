@@ -93,21 +93,36 @@ for f in Files:
     #output = open("Final/"+f.name, "w")
     with codecs.open("Final/"+f.name, "w", "utf-8") as output:
     
+        URl = False
+        for l in biblines:
+            doi_lines = l.find('doi')
+            if doi_lines != -1:
+                URL = l
+                URL = URL.replace('doi','url')
+            
+
         for l in biblines:
             author_lines = l.find('author')
             file_lines = l.find('file')
             abstract_lines = l.find('abstract')
-
+            
+            
             # Quitamos file lines
             if file_lines != -1 or abstract_lines != -1:
                 continue
+
             if author_lines != -1:
                 output.write(final_authors) # Cambiamos lista de autores
                 output.write('\tpages = {1-10},\n')
+                if URL != False:
+                    output.write(URL)
+            
+                  
             else:
-                output.write(l)
+                output.write(l)                   
+                 
+
         
-    #output.close()
     
     #output1 = open("Temp/"+f.name, "w")
     with codecs.open("Temp/"+f.name, "w", "utf-8") as output1:
@@ -116,3 +131,23 @@ for f in Files:
             output1.write(name+'\n')
     
     #output1.close()
+
+# Ahora creamos el archivo final
+Files1 = []
+
+for f in glob.glob('Final/Data/*.bib'):
+    file = open(f, 'r', encoding='utf-8')
+    Files1.append(file)
+
+
+with codecs.open("Final/DataFinal.bib", "w", "utf-8") as output1:
+
+    
+    for f in Files1:
+
+        biblines = f.readlines()
+
+        for l in biblines:
+            output1.write(l)
+
+        
