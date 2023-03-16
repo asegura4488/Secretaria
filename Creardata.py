@@ -70,20 +70,20 @@ for f in Files:
         else:
             Autor_noencontrado.append(Dict1[author])
         
-    final_authors='\t author={'
+    final_authors='\tauthor={'
     
     for i,name in enumerate(Autor_encontrado):
         if i == 0:
             final_authors+=name
         else:
-            final_authors+=', '+name
+            final_authors+=' and '+name
 
     encontrado = False
     for l in biblines:
         CMS = l.find('CMS')
         if CMS != -1 and encontrado == False:
             encontrado = True
-            final_authors += ', CMS Collaboration' 
+            final_authors += ' and CMS Collaboration' 
 
     final_authors+='},\n'
     
@@ -95,8 +95,15 @@ for f in Files:
     
         for l in biblines:
             author_lines = l.find('author')
+            file_lines = l.find('file')
+            abstract_lines = l.find('abstract')
+
+            # Quitamos file lines
+            if file_lines != -1 or abstract_lines != -1:
+                continue
             if author_lines != -1:
                 output.write(final_authors) # Cambiamos lista de autores
+                output.write('\tpages = {1-10},\n')
             else:
                 output.write(l)
         
