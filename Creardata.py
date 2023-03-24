@@ -93,14 +93,18 @@ for f in Files:
     #output = open("Final/"+f.name, "w")
     with codecs.open("Final/"+f.name, "w", "utf-8") as output:
     
-        URl = False
+        Doi = False
         for l in biblines:
-            doi_lines = l.find('doi')
+            doi_lines = l.find('doi = ')
             if doi_lines != -1:
-                URL = l
-                URL = URL.replace('doi','url')
-            
-
+                Doi = l
+                Doi = Doi.replace('doi = {',"")
+                Doi = Doi.replace('},',"")
+                # Quitamos espacios en blanco
+                Doi = Doi.strip()
+              #  print(Doi)
+        
+       
         for l in biblines:
             author_lines = l.find('author')
             file_lines = l.find('file')
@@ -114,8 +118,8 @@ for f in Files:
             if author_lines != -1:
                 output.write(final_authors) # Cambiamos lista de autores
                 output.write('\tpages = {1-10},\n')
-                if URL != False:
-                    output.write(URL)
+                if Doi != False:
+                    output.write('\turl = {https://'+Doi+'/},\n')
             
                   
             else:
