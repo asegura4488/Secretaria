@@ -119,7 +119,7 @@ for f in Files:
                 output.write(final_authors) # Cambiamos lista de autores
                 output.write('\tpages = {1-10},\n')
                 if Doi != False:
-                    output.write('\turl = {https://'+Doi+'/},\n')
+                    output.write('\turl = {https://doi.org/'+Doi+'},\n')
             
                   
             else:
